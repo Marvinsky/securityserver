@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es5",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "checkJs": false,
+    "noEmitHelpers": false,
+    "noEmitOnError": true,
+    "skipLibCheck": true,
+    "lib": ["es6", "dom", "ES2015.Iterable"],
+    "baseUrl": "."
+  },
+  "exclude": ["node_modules", "platforms", "**/*.aot.ts"]
+}
