@@ -1,4 +1,4 @@
-import { createUser } from "../../../app/data/data-access";
+import { createUser, getUser } from "../../../app/data/data-access";
 import { Request, Response } from "express";
 
 export function registerUser(req: Request, res: Response) {
@@ -13,5 +13,10 @@ export function registerUser(req: Request, res: Response) {
 }
 
 export function loginUser(req: Request, res: Response) {
-  return res.json({ message: "User logged!" });
+  const user = getUser(req.body.email);
+  if (user) {
+    return res.json({ message: "User logged!" });
+  } else {
+    res.status(403).json({ message: "Invalid credentials!" });
+  }
 }
