@@ -15,10 +15,11 @@ function registerUser(req, res) {
 exports.registerUser = registerUser;
 function loginUser(req, res) {
     var user = (0, data_access_1.getUser)(req.body.email);
-    var passwordMatches = (0, util_1.verifyPassword)(req.body.password, user.password);
     if (user) {
+        var passwordMatches = (0, util_1.verifyPassword)(req.body.password, user.password);
         if (passwordMatches) {
-            return res.json({ message: "User logged!" });
+            var jwt = (0, util_1.createToken)(user);
+            return res.json({ message: "User logged!", access_token: jwt });
         }
         else {
             res.status(403).json({ message: "Invalid credentials!" });

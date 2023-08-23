@@ -1,4 +1,8 @@
-import { hashPassword, verifyPassword } from "../../../app/shared/util";
+import {
+  createToken,
+  hashPassword,
+  verifyPassword,
+} from "../../../app/shared/util";
 import { createUser, getUser } from "../../../app/data/data-access";
 import { Request, Response } from "express";
 
@@ -17,11 +21,13 @@ export function registerUser(req: Request, res: Response) {
 
 export function loginUser(req: Request, res: Response) {
   const user = getUser(req.body.email);
-  const passwordMatches = verifyPassword(req.body.password, user.password);
 
   if (user) {
+    const passwordMatches = verifyPassword(req.body.password, user.password);
     if (passwordMatches) {
-      return res.json({ message: "User logged!" });
+      const jwt = createToken(user);
+
+      return res.json({ message: "User logged!", access_token: jwt });
     } else {
       res.status(403).json({ message: "Invalid credentials!" });
     }
