@@ -4,9 +4,14 @@ var controller_1 = require("./app/players/controller");
 var express = require("express");
 var bodyParser = require("body-parser");
 var controller_2 = require("./app/users/controller");
+var expressjwt = require("express-jwt");
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+var jwtCheckMiddleware = expressjwt.expressjwt({
+    secret: process.env["SECRET"],
+    algorithms: ["HS256"],
+});
 var port = 8084;
 var router = express.Router();
 router.get("/", function (req, res) {
@@ -14,7 +19,7 @@ router.get("/", function (req, res) {
 });
 router.post("/register", controller_2.registerUser);
 router.post("/login", controller_2.loginUser);
-router.get("/players", controller_1.getPlayers);
-router.get("/players/:id", controller_1.getPlayerById);
+router.get("/players", jwtCheckMiddleware, controller_1.getPlayers);
+router.get("/players/:id", jwtCheckMiddleware, controller_1.getPlayerById);
 app.use("/api", router);
 app.listen(port);

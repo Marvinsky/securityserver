@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.loginUser = exports.registerUser = void 0;
 var util_1 = require("../../../app/shared/util");
 var data_access_1 = require("../../../app/data/data-access");
+var jwtDecode = require("jwt-decode");
 function registerUser(req, res) {
     var hashedPassword = (0, util_1.hashPassword)(req.body.password);
     var userData = {
@@ -19,7 +20,12 @@ function loginUser(req, res) {
         var passwordMatches = (0, util_1.verifyPassword)(req.body.password, user.password);
         if (passwordMatches) {
             var jwt = (0, util_1.createToken)(user);
-            return res.json({ message: "User logged!", access_token: jwt });
+            var decodedJwt = jwtDecode.default(jwt);
+            return res.json({
+                message: "User logged!",
+                access_token: jwt,
+                expires: decodedJwt.exp,
+            });
         }
         else {
             res.status(403).json({ message: "Invalid credentials!" });
