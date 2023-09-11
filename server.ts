@@ -4,6 +4,8 @@ import { Express, Router, Request, Response } from "express";
 import * as bodyParser from "body-parser";
 import { loginUser, registerUser } from "./app/users/controller";
 import * as expressjwt from "express-jwt";
+import * as fs from "fs";
+import * as https from "https";
 
 const app: Express = express();
 
@@ -15,7 +17,7 @@ const jwtCheckMiddleware = expressjwt.expressjwt({
   algorithms: ["HS256"],
 });
 
-const port = 8084;
+//const port = 8084;
 
 const router: Router = express.Router();
 
@@ -31,4 +33,14 @@ router.get("/players/:id", jwtCheckMiddleware, getPlayerById);
 
 app.use("/api", router);
 
-app.listen(port);
+//app.listen(port);
+const httpsPort = 8443;
+const httpsServer = https.createServer(
+  {
+    key: fs.readFileSync("server.key"),
+    cert: fs.readFileSync("server.cert"),
+  },
+  app
+);
+
+httpsServer.listen(httpsPort);
